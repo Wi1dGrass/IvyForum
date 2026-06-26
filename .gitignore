@@ -52,6 +52,7 @@ docs/问题清单.md
 # === 测试文件 ===
 test/
 backend/cp.txt
+backend/uploads/
 
 # === IDE ===
 .vscode/settings.json
