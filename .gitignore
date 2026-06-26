@@ -1,4 +1,4 @@
-# Java
+# === Java / Maven ===
 backend/target/
 *.class
 *.jar
@@ -9,22 +9,45 @@ backend/target/
 *.classpath
 *.project
 .settings/
+backend/.flattened-pom.xml
+backend/dependency-reduced-pom.xml
 
-# Node
+# === Node ===
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
 frontend/*.tsbuildinfo
 frontend/src/**/*.js
 frontend/src/**/*.js.map
+frontend/.pnpm-store/
 
-# Docs temp
-docs/prompt.md
+# === 临时与缓存 ===
+*.swp
+*.swo
+*~
+*.bak
+*.orig
+*.js.map
+.local-chromium/
+frontend/vite.config.js
+frontend/vite.config.js.map
 
-# OS
+# === 操作系统 ===
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Env
+# === 环境变量与密钥 ===
 .env
 .env.local
+.env.*.local
+backend/src/main/resources/application-local.yml
+backend/src/main/resources/application-dev.yml
+
+# === 文档临时文件 ===
+docs/prompt.md
+docs/tmp/
+
+# === IDE ===
+.vscode/settings.json
+.vscode/launch.json

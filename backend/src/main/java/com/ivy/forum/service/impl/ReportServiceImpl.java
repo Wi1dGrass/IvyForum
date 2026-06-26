@@ -33,7 +33,8 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Page<Report> listPending(int page, int size) {
         return reportMapper.selectPage(new Page<>(page, size),
-                new LambdaQueryWrapper<Report>().orderByAsc(Report::getStatus));
+                new LambdaQueryWrapper<Report>().eq(Report::getStatus, "PENDING")
+                        .orderByDesc(Report::getCreateTime));
     }
 
     @Override

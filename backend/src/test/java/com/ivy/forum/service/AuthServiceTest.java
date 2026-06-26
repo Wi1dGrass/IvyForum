@@ -29,7 +29,7 @@ class AuthServiceTest {
     @Test
     void AUTH_SVC_001_register_should_succeed() {
         RegisterRequest req = new RegisterRequest();
-        req.setUsername("testuser");
+        req.setUsername("testuser_" + System.currentTimeMillis());
         req.setPassword("123456");
         req.setNickname("测试用户");
         LoginResponse resp = authService.register(req);
