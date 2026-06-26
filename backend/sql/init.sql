@@ -150,7 +150,7 @@ CREATE TABLE t_hot_post (
 
 -- seed data
 INSERT INTO t_user (username, password, nickname, role, status, email, signature)
-VALUES ('admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Admin', 'ADMIN', 'NORMAL', 'admin@ivy.edu', 'Forum Admin');
+VALUES ('admin', '$2a$10$1vca0X5PJwTqVFzFic3EreuOUuj5QnNceycx5mz1qfTqEfkPvzFme', 'Admin', 'ADMIN', 'NORMAL', 'admin@ivy.edu', 'Forum Admin');
 
 INSERT INTO t_channel (parent_id, name, sort, description, status) VALUES
 (0, '学习交流', 1, '学术问题与课程讨论', 'NORMAL'),
