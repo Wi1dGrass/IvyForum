@@ -15,6 +15,8 @@
 import { computed } from 'vue'
 import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
+import { uploadApi } from '@/api/upload'
+import { ElMessage } from 'element-plus'
 
 const props = withDefaults(defineProps<{
   modelValue: string
@@ -35,18 +37,13 @@ const editorHeight = props.height
 async function onUploadImg(files: File[], callback: (urls: string[]) => void) {
   const urls: string[] = []
   for (const file of files) {
-    const dataUrl = await fileToDataUrl(file)
-    urls.push(dataUrl)
+    try {
+      const res = await uploadApi.image(file)
+      urls.push(res.url)
+    } catch {
+      ElMessage.error(`图片 ${file.name} 上传失败`)
+    }
   }
   callback(urls)
-}
-
-function fileToDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
 }
 </script>

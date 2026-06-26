@@ -12,11 +12,11 @@ const routes: RouteRecordRaw[] = [
       { path: 'search', name: 'search', component: () => import('@/views/public/SearchView.vue') },
       { path: 'hot', name: 'hot', component: () => import('@/views/public/HotView.vue') },
       { path: 'post/:id', name: 'post', component: () => import('@/views/public/PostDetail.vue'), props: true },
-      { path: 'post/new', name: 'post-new', component: () => import('@/views/public/PostEdit.vue'), meta: { requiresAuth: true, roles: ['STUDENT', 'TEACHER'] } },
-      { path: 'post/edit/:id', name: 'post-edit', component: () => import('@/views/public/PostEdit.vue'), props: true, meta: { requiresAuth: true, roles: ['STUDENT', 'TEACHER'] } },
+      { path: 'post/new', name: 'post-new', component: () => import('@/views/public/PostEdit.vue'), meta: { requiresAuth: true, roles: ['STUDENT', 'TEACHER', 'ADMIN'] } },
+      { path: 'post/edit/:id', name: 'post-edit', component: () => import('@/views/public/PostEdit.vue'), props: true, meta: { requiresAuth: true, roles: ['STUDENT', 'TEACHER', 'ADMIN'] } },
       { path: 'user/:id', name: 'user', component: () => import('@/views/user/ProfileView.vue'), props: true },
       { path: 'profile', name: 'profile-edit', component: () => import('@/views/user/EditProfile.vue'), meta: { requiresAuth: true } },
-      { path: 'my/posts', name: 'my-posts', component: () => import('@/views/user/MyPosts.vue'), meta: { requiresAuth: true, roles: ['STUDENT', 'TEACHER'] } },
+      { path: 'my/posts', name: 'my-posts', component: () => import('@/views/user/MyPosts.vue'), meta: { requiresAuth: true, roles: ['STUDENT', 'TEACHER', 'ADMIN'] } },
       { path: 'my/collects', name: 'my-collects', component: () => import('@/views/user/MyCollects.vue'), meta: { requiresAuth: true } },
       { path: 'notifications', name: 'notifications', component: () => import('@/views/user/Notifications.vue'), meta: { requiresAuth: true } }
     ]
@@ -45,11 +45,14 @@ const router = createRouter({
   scrollBehavior() { return { top: 0 } }
 })
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const userStore = useUserStore()
   if (to.meta.requiresAuth && !userStore.isLoggedIn) {
     next({ name: 'login', query: { redirect: to.fullPath } })
     return
+  }
+  if (to.meta.requiresAuth && !userStore.user) {
+    try { await userStore.fetchMe() } catch { userStore.logout(); next({ name: 'login' }); return }
   }
   const roles = to.meta.roles as string[] | undefined
   if (roles && roles.length && (!userStore.user || !roles.includes(userStore.user.role))) {

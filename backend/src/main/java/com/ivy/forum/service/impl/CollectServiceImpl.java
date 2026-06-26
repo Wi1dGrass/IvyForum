@@ -1,8 +1,11 @@
 package com.ivy.forum.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.ivy.forum.entity.Collect;
+import com.ivy.forum.entity.Post;
 import com.ivy.forum.mapper.CollectMapper;
+import com.ivy.forum.mapper.PostMapper;
 import com.ivy.forum.service.CollectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 public class CollectServiceImpl implements CollectService {
 
     private final CollectMapper collectMapper;
+    private final PostMapper postMapper;
 
     @Override
     @Transactional
@@ -26,11 +30,17 @@ public class CollectServiceImpl implements CollectService {
                         .eq(Collect::getPostId, postId));
         if (existing != null) {
             collectMapper.deleteById(existing.getCollectId());
+            postMapper.update(null, new LambdaUpdateWrapper<Post>()
+                    .eq(Post::getPostId, postId)
+                    .setSql("collect_count = GREATEST(collect_count - 1, 0)"));
         } else {
             Collect c = new Collect();
             c.setUserId(userId);
             c.setPostId(postId);
             collectMapper.insert(c);
+            postMapper.update(null, new LambdaUpdateWrapper<Post>()
+                    .eq(Post::getPostId, postId)
+                    .setSql("collect_count = collect_count + 1"));
         }
     }
 

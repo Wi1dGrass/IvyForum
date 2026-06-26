@@ -37,4 +37,10 @@ public class AuthController {
     public Result<User> me() {
         return Result.ok(authService.currentUser());
     }
+
+    @Operation(summary = "登出")
+    @PostMapping("/logout")
+    public Result<Void> logout() {
+        return Result.ok();
+    }
 }

@@ -66,6 +66,24 @@ public class PostServiceImpl implements PostService {
         if (p == null || "DELETED".equals(p.getStatus())) throw new BusinessException(ErrorCode.NOT_FOUND);
         p.setViewCount(p.getViewCount() + 1);
         postMapper.updateById(p);
+        // populate extra fields
+        User author = userMapper.selectById(p.getAuthorId());
+        if (author != null) {
+            p.setAuthorNickname(author.getNickname());
+            p.setAuthorAvatar(author.getAvatar());
+        }
+        Channel channel = channelMapper.selectById(p.getChannelId());
+        if (channel != null) {
+            p.setChannelName(channel.getName());
+        }
+        List<PostTag> pts = postTagMapper.selectList(
+                new LambdaQueryWrapper<PostTag>().eq(PostTag::getPostId, id));
+        List<TagBriefVo> tags = pts.stream()
+                .map(pt -> tagMapper.selectById(pt.getTagId()))
+                .filter(Objects::nonNull)
+                .map(t -> new TagBriefVo(t.getTagId(), t.getName(), t.getColor()))
+                .collect(Collectors.toList());
+        p.setTags(tags);
         return p;
     }
 

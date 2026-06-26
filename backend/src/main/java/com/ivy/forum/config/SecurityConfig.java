@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/auth/register",
                                 "/auth/login",
+                                "/auth/logout",
                                 "/doc.html",
                                 "/swagger-resources/**",
                                 "/webjars/**",
@@ -49,7 +50,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET,
                                 "/channels/**", "/tags/**", "/tags", "/posts", "/posts/hot", "/posts/**",
-                                "/comments/**", "/users/*/profile", "/users/*/posts", "/users/*/collects"
+                                "/comments/**", "/users/*/profile", "/users/*/posts", "/users/*/collects",
+                                "/uploads/**"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

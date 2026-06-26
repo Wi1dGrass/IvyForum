@@ -48,3 +48,7 @@ logging:
   level:
     com.ivy.forum: debug
     com.baomidou: warn
+
+# 文件上传
+file:
+  upload-dir: ./uploads

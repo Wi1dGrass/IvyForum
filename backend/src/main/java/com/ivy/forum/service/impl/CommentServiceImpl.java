@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.ivy.forum.common.BusinessException;
 import com.ivy.forum.common.ErrorCode;
 import com.ivy.forum.entity.Comment;
+import com.ivy.forum.entity.User;
 import com.ivy.forum.mapper.CommentMapper;
 import com.ivy.forum.mapper.PostMapper;
+import com.ivy.forum.mapper.UserMapper;
 import com.ivy.forum.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
     private final PostMapper postMapper;
+    private final UserMapper userMapper;
 
     @Override
     public List<Comment> listByPost(Long postId) {
@@ -30,10 +33,20 @@ public class CommentServiceImpl implements CommentService {
                         .eq(Comment::getIsDeleted, 0)
                         .orderByAsc(Comment::getCreateTime));
 
+        Map<Long, User> userCache = new HashMap<>();
+        for (Comment c : all) {
+            User u = userCache.computeIfAbsent(c.getAuthorId(), userMapper::selectById);
+            if (u != null) {
+                c.setAuthorNickname(u.getNickname());
+                c.setAuthorAvatar(u.getAvatar());
+                c.setAuthorRole(u.getRole());
+            }
+            c.setChildren(new ArrayList<>());
+        }
+
         Map<Long, Comment> map = new LinkedHashMap<>();
         List<Comment> roots = new ArrayList<>();
         for (Comment c : all) {
-            c.setChildren(new ArrayList<>());
             map.put(c.getCommentId(), c);
             if (c.getParentId() == null) {
                 roots.add(c);

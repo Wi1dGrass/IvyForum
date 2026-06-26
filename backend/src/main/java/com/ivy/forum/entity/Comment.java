@@ -25,4 +25,10 @@ public class Comment {
     private LocalDateTime createTime;
     @TableField(exist = false)
     private List<Comment> children;
+    @TableField(exist = false)
+    private String authorNickname;
+    @TableField(exist = false)
+    private String authorAvatar;
+    @TableField(exist = false)
+    private String authorRole;
 }

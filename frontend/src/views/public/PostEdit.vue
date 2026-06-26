@@ -77,8 +77,8 @@ async function submit() {
       await postApi.update(Number(props.id), form)
       ElMessage.success('修改成功'); router.push(`/post/${props.id}`)
     } else {
-      const r = await postApi.create(form)
-      ElMessage.success('发布成功'); router.push(`/post/${r.postId}`)
+      const postId = await postApi.create(form)
+      ElMessage.success('发布成功'); router.push(`/post/${postId}`)
     }
   } finally { submitting.value = false }
 }

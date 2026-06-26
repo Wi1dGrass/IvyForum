@@ -7,6 +7,13 @@ export default defineConfig(({ mode }) => {
   const useMock = (env.VITE_USE_MOCK ?? 'true') === 'true'
   return {
     plugins: [vue()],
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler'
+        }
+      }
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src')

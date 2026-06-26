@@ -4,8 +4,10 @@ import com.ivy.forum.common.PageResult;
 import com.ivy.forum.common.Result;
 import com.ivy.forum.dto.req.PostCreateRequest;
 import com.ivy.forum.dto.resp.PostItemVo;
+import com.ivy.forum.entity.Comment;
 import com.ivy.forum.entity.Post;
 import com.ivy.forum.security.SecurityUtils;
+import com.ivy.forum.service.CommentService;
 import com.ivy.forum.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +24,7 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     @Operation(summary = "帖子列表(分页)")
     @GetMapping
@@ -46,6 +49,12 @@ public class PostController {
     @GetMapping("/{id}")
     public Result<Post> detail(@PathVariable Long id) {
         return Result.ok(postService.detail(id));
+    }
+
+    @Operation(summary = "帖子评论列表(树形)")
+    @GetMapping("/{id}/comments")
+    public Result<List<Comment>> postComments(@PathVariable Long id) {
+        return Result.ok(commentService.listByPost(id));
     }
 
     @Operation(summary = "发帖")

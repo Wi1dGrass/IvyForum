@@ -4,8 +4,12 @@
     <el-form :model="form" :rules="rules" ref="formRef" label-position="top" class="form sf-card">
       <el-form-item label="头像">
         <div class="avatar-row">
-          <el-avatar :size="64" :src="form.avatar || ''">{{ form.nickname?.[0] }}</el-avatar>
-          <el-input v-model="form.avatar" placeholder="头像图片地址" style="flex:1" />
+          <el-avatar :size="72" :src="form.avatar || ''" class="avatar-preview">{{ form.nickname?.[0] }}</el-avatar>
+          <div class="avatar-actions">
+            <el-button type="primary" plain @click="pickAvatar">上传头像</el-button>
+            <p class="hint">支持 JPG/PNG，不超过 2MB</p>
+          </div>
+          <input ref="fileInput" type="file" accept="image/jpeg,image/png" style="display:none" @change="onFileChange" />
         </div>
       </el-form-item>
       <el-form-item label="昵称" prop="nickname"><el-input v-model="form.nickname" /></el-form-item>
@@ -29,6 +33,7 @@ import { ref, reactive } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 import { authApi } from '@/api/auth'
+import { uploadApi } from '@/api/upload'
 
 const userStore = useUserStore()
 const form = reactive({ nickname: userStore.user?.nickname || '', avatar: userStore.user?.avatar || '', signature: userStore.user?.signature || '', email: userStore.user?.email || '' })
@@ -36,6 +41,23 @@ const pwd = reactive({ oldPassword: '', newPassword: '' })
 const rules: FormRules = { nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }] }
 const formRef = ref<FormInstance>()
 const saving = ref(false)
+const uploading = ref(false)
+const fileInput = ref<HTMLInputElement>()
+
+function pickAvatar() { fileInput.value?.click() }
+async function onFileChange(e: Event) {
+  const input = e.target as HTMLInputElement
+  if (!input.files?.length) return
+  const file = input.files[0]
+  if (file.size > 2 * 1024 * 1024) { ElMessage.warning('图片不能超过 2MB'); return }
+  uploading.value = true
+  try {
+    const res = await uploadApi.avatar(file)
+    form.avatar = res.url
+    ElMessage.success('头像上传成功')
+  } catch { ElMessage.error('头像上传失败') }
+  finally { uploading.value = false; input.value = '' }
+}
 
 async function save() {
   await formRef.value?.validate()
@@ -54,6 +76,9 @@ async function save() {
 
 <style scoped lang="scss">
 .form { max-width: 640px; padding: 24px; }
-.avatar-row { display: flex; align-items: center; gap: 14px; width: 100%; }
+.avatar-row { display: flex; align-items: center; gap: 18px; width: 100%; }
+.avatar-preview { border: 2px solid var(--sf-border, #e6eaf3); }
+.avatar-actions { display: flex; flex-direction: column; gap: 4px; }
+.hint { font-size: 12px; color: var(--sf-text-3, #94a3b8); margin: 0; }
 .footer { display: flex; justify-content: flex-end; gap: 10px; }
 </style>
