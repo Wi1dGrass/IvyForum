@@ -56,8 +56,14 @@ async function load(p = page.value) {
   const r = await postApi.list({ page: p, size: 1000, sort: 'latest' })
   list.value = r.records as any; total.value = r.total; loading.value = false
 }
-async function toggleTop(row: any) { const r = await postApi.toggleTop(row.postId); row.isTop = r.isTop }
-async function toggleEssence(row: any) { const r = await postApi.toggleEssence(row.postId); row.isEssence = r.isEssence }
+async function toggleTop(row: any) {
+  await postApi.toggleTop(row.postId)
+  row.isTop = row.isTop ? 0 : 1
+}
+async function toggleEssence(row: any) {
+  await postApi.toggleEssence(row.postId)
+  row.isEssence = row.isEssence ? 0 : 1
+}
 async function del(row: any) {
   await ElMessageBox.confirm(`删除帖子「${row.title}」？`, '提示', { type: 'warning' })
   await postApi.remove(row.postId); await load(); ElMessage.success('已删除')

@@ -46,6 +46,7 @@ export type PostSort = 'latest' | 'hot'
 export interface PostListItem {
   postId: number; authorId: number; authorNickname: string; authorAvatar: string | null
   channelId: number; channelName: string; title: string
+  contentAbstract?: string; firstImage?: string
   viewCount: number; likeCount: number; commentCount: number; collectCount: number
   isTop: number; isEssence: number; tags: TagBrief[]
   createTime: string

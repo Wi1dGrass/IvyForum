@@ -200,6 +200,8 @@ public class PostServiceImpl implements PostService {
         Channel c = channelMapper.selectById(p.getChannelId());
         if (c != null) vo.setChannelName(c.getName());
         vo.setTitle(p.getTitle());
+        vo.setContentAbstract(extractAbstract(p.getContent()));
+        vo.setFirstImage(extractFirstImage(p.getContent()));
         vo.setViewCount(p.getViewCount());
         vo.setLikeCount(p.getLikeCount());
         vo.setCommentCount(p.getCommentCount());
@@ -223,5 +225,22 @@ public class PostServiceImpl implements PostService {
             }).collect(Collectors.toList()));
         }
         return vo;
+    }
+
+    private String extractAbstract(String content) {
+        if (content == null) return "";
+        String text = content
+                .replaceAll("!\\[.*?\\]\\(.*?\\)", " ")  // images
+                .replaceAll("```[\\s\\S]*?```", " ")      // code blocks
+                .replaceAll("#+", " ")                     // headings
+                .replaceAll("[*_`>|\\-\\[\\]]", " ")      // markdown symbols
+                .replaceAll("\\s+", " ").trim();
+        return text.length() > 150 ? text.substring(0, 150) + "…" : text;
+    }
+
+    private String extractFirstImage(String content) {
+        if (content == null) return null;
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("!\\[.*?\\]\\((.*?)\\)").matcher(content);
+        return m.find() ? m.group(1) : null;
     }
 }

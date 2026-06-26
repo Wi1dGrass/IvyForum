@@ -8,6 +8,6 @@ export const postApi = {
   create: (data: PostSaveRequest) => request.post<number>('/posts', data),
   update: (id: number, data: PostSaveRequest) => request.put<number>(`/posts/${id}`, data),
   remove: (id: number) => request.delete(`/posts/${id}`),
-  toggleTop: (id: number) => request.post<{ isTop: number }>(`/admin/posts/${id}/top`),
-  toggleEssence: (id: number) => request.post<{ isEssence: number }>(`/admin/posts/${id}/essence`)
+  toggleTop: (id: number) => request.post<void>(`/admin/posts/${id}/top`),
+  toggleEssence: (id: number) => request.post<void>(`/admin/posts/${id}/essence`)
 }

@@ -14,6 +14,8 @@ public class PostItemVo {
     private Long channelId;
     private String channelName;
     private String title;
+    private String contentAbstract;
+    private String firstImage;
     private Integer viewCount;
     private Integer likeCount;
     private Integer commentCount;

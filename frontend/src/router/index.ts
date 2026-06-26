@@ -52,11 +52,20 @@ router.beforeEach(async (to, _from, next) => {
     return
   }
   if (to.meta.requiresAuth && !userStore.user) {
-    try { await userStore.fetchMe() } catch { userStore.logout(); next({ name: 'login' }); return }
+    try {
+      await userStore.fetchMe()
+    } catch {
+      userStore.logout()
+    }
+  }
+  if (to.meta.requiresAuth && !userStore.isLoggedIn) {
+    next({ name: 'login', query: { redirect: to.fullPath } })
+    return
   }
   const roles = to.meta.roles as string[] | undefined
   if (roles && roles.length && (!userStore.user || !roles.includes(userStore.user.role))) {
-    next('/'); return
+    next({ name: 'login', query: { redirect: to.fullPath } })
+    return
   }
   next()
 })
