@@ -153,20 +153,20 @@ INSERT INTO t_user (username, password, nickname, role, status, email, signature
 VALUES ('admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Admin', 'ADMIN', 'NORMAL', 'admin@ivy.edu', 'Forum Admin');
 
 INSERT INTO t_channel (parent_id, name, sort, description, status) VALUES
-(0, 'Academics', 1, 'Academic topics & courses', 'NORMAL'),
-(0, 'Campus Life', 2, 'Campus activities & living', 'NORMAL'),
-(0, 'Tech Sharing', 3, 'Programming & technology', 'NORMAL'),
-(0, 'Jobs & Internships', 4, 'Career & recruitment', 'NORMAL'),
-(0, 'Q&A', 5, 'Questions & answers', 'NORMAL');
+(0, '学习交流', 1, '学术问题与课程讨论', 'NORMAL'),
+(0, '校园生活', 2, '食宿活动周边', 'NORMAL'),
+(0, '技术分享', 3, '编程与新技术', 'NORMAL'),
+(0, '求职招聘', 4, '实习与就业', 'NORMAL'),
+(0, '答疑解惑', 5, '提问求助', 'NORMAL');
 
 INSERT INTO t_tag (name, color) VALUES
 ('Java', '#F56C6C'),
 ('Python', '#67C23A'),
-('Frontend', '#409EFF'),
-('Backend', '#909399'),
-('Algorithms', '#E6A23C'),
-('Exam', '#F56C6C'),
-('Internship', '#67C23A'),
-('Course', '#409EFF'),
-('Homework', '#909399'),
-('Other', '#C0C4CC');
+('前端', '#409EFF'),
+('后端', '#909399'),
+('算法', '#E6A23C'),
+('考研', '#F56C6C'),
+('实习', '#67C23A'),
+('考试', '#409EFF'),
+('课程', '#909399'),
+('其他', '#C0C4CC');
