@@ -1,0 +1,30 @@
+# Java
+backend/target/
+*.class
+*.jar
+*.war
+*.log
+*.iml
+.idea/
+*.classpath
+*.project
+.settings/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/*.tsbuildinfo
+frontend/src/**/*.js
+frontend/src/**/*.js.map
+
+# Docs temp
+docs/prompt.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
