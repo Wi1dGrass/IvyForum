@@ -55,10 +55,10 @@ async function submit() {
 .bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(255,255,255,.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(247,127,0,.3), transparent 50%); }
 .box { position: relative; width: 400px; max-width: 92vw; padding: 32px; border-radius: 18px; }
 .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-.logo { width: 36px; height: 36px; border-radius: 10px; background: #fff; color: var(--sf-primary); display: flex; align-items: center; justify-content: center; font-weight: 700; }
-.brand span:last-child { color: #fff; font-size: 18px; font-weight: 700; }
-.title { color: #fff; font-size: 22px; font-weight: 700; }
-.sub { color: rgba(255,255,255,.8); margin: 4px 0 18px; font-size: 13px; }
+.logo { width: 36px; height: 36px; border-radius: 10px; background: var(--sf-gradient); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.brand span:last-child { font-size: 18px; font-weight: 700; color: var(--sf-text-1, #1f2937); }
+.title { font-size: 22px; font-weight: 700; color: var(--sf-text-1, #1f2937); }
+.sub { color: var(--sf-text-3, #94a3b8); margin: 4px 0 18px; font-size: 13px; }
 .submit { width: 100%; margin-top: 4px; }
 .switch { text-align: center; margin-top: 16px; font-size: 13px; color: var(--sf-text-3, #94a3b8); a { color: var(--sf-primary, #4361ee); } }
 </style>

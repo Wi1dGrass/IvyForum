@@ -3,7 +3,7 @@
     <div class="toolbar">
       <el-input v-model="kw" placeholder="搜索用户名/昵称" :prefix-icon="Search" clearable style="width: 240px" />
     </div>
-    <el-table :data="filtered" class="table sf-card">
+    <el-table :data="list" class="table sf-card">
       <el-table-column label="ID" prop="userId" width="80" />
       <el-table-column label="用户名" prop="username" width="140" />
       <el-table-column label="昵称" prop="nickname" width="140" />
@@ -21,34 +21,38 @@
         </template>
       </el-table-column>
     </el-table>
-    <Pagination :total="total" :page="page" :size="size" @change="load" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { adminUserApi } from '@/api/user'
-import Pagination from '@/components/Pagination.vue'
 import type { AdminUserItem } from '@/types'
 
+const allList = ref<AdminUserItem[]>([])
 const list = ref<AdminUserItem[]>([])
-const total = ref(0); const page = ref(1); const size = 20
 const loading = ref(true)
 const kw = ref('')
-const filtered = computed(() => list.value.filter(u => !kw.value || u.username.includes(kw.value) || u.nickname.includes(kw.value)))
 
 const roleText = (r: string) => ({ STUDENT: '学生', TEACHER: '教师', ADMIN: '管理员' } as any)[r]
 
-async function load(p = page.value) {
-  page.value = p; loading.value = true
-  const r = await adminUserApi.list(p, size)
-  list.value = r.records; total.value = r.total; loading.value = false
+async function load() {
+  loading.value = true
+  allList.value = await adminUserApi.list() || []
+  applyFilter()
+  loading.value = false
+}
+function applyFilter() {
+  const a = allList.value
+  if (!kw.value) list.value = a
+  else list.value = a.filter(u => u.username.includes(kw.value) || u.nickname.includes(kw.value))
 }
 async function ban(row: AdminUserItem) { await adminUserApi.ban(row.userId); row.status = 'BANNED'; ElMessage.success('已封禁') }
 async function unban(row: AdminUserItem) { await adminUserApi.unban(row.userId); row.status = 'NORMAL'; ElMessage.success('已解封') }
-onMounted(() => load(1))
+watch(kw, applyFilter)
+onMounted(() => load())
 </script>
 
 <style scoped lang="scss">

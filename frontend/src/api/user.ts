@@ -14,7 +14,7 @@ export const userApi = {
 
 export const adminUserApi = {
   list: (page = 1, size = 20) =>
-    request.get<PageResult<AdminUserItem>>('/admin/users', { params: { page, size } }),
+    request.get<AdminUserItem[]>('/admin/users'),
   ban: (id: number) => request.post<void>(`/admin/users/${id}/ban`),
   unban: (id: number) => request.post<void>(`/admin/users/${id}/unban`)
 }

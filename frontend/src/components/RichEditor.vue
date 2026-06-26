@@ -7,6 +7,7 @@
     :style="{ height: editorHeight }"
     :preview-theme="'github'"
     :code-theme="'github'"
+    :on-upload-img="onUploadImg"
   />
 </template>
 
@@ -30,4 +31,22 @@ const inner = computed({
   set: (v) => emit('update:modelValue', v)
 })
 const editorHeight = props.height
+
+async function onUploadImg(files: File[], callback: (urls: string[]) => void) {
+  const urls: string[] = []
+  for (const file of files) {
+    const dataUrl = await fileToDataUrl(file)
+    urls.push(dataUrl)
+  }
+  callback(urls)
+}
+
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+}
 </script>

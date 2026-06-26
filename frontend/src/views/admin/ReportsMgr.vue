@@ -26,19 +26,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <Pagination :total="total" :page="page" :size="size" @change="load" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { reportApi } from '@/api/report'
-import Pagination from '@/components/Pagination.vue'
 import type { Report, ReportStatus } from '@/types'
 
 const list = ref<Report[]>([])
-const total = ref(0); const page = ref(1); const size = 20
 const loading = ref(true)
 const tab = ref<'PENDING' | 'ALL'>('PENDING')
 const filtered = computed(() => tab.value === 'PENDING' ? list.value.filter(r => r.status === 'PENDING') : list.value)
@@ -47,10 +44,10 @@ const targetText = (r: Report) => ({ POST: '帖子', COMMENT: '评论', USER: '�
 const statusText = (s: string) => ({ PENDING: '待处理', PASS: '通过', REJECT: '驳回' } as any)[s]
 const statusType = (s: string) => ({ PENDING: 'warning', PASS: 'success', REJECT: 'info' } as any)[s]
 
-async function load(p = page.value) {
-  page.value = p; loading.value = true
-  const r = await reportApi.adminList(p, size)
-  list.value = r.records; total.value = r.total; loading.value = false
+async function load() {
+  loading.value = true
+  list.value = await reportApi.adminList() || []
+  loading.value = false
 }
 async function handle(row: Report, status: ReportStatus) {
   const { value } = await ElMessageBox.prompt(status === 'PASS' ? '处理备注（可选）' : '驳回说明（可选）', '审核', { inputType: 'textarea', inputValue: '' }).catch(() => ({ value: null as any }))
@@ -58,8 +55,7 @@ async function handle(row: Report, status: ReportStatus) {
   await reportApi.handle(row.reportId, { status, handleRemark: value })
   await load(); ElMessage.success('已处理')
 }
-watch(tab, () => load(1))
-onMounted(() => load(1))
+onMounted(() => load())
 </script>
 
 <style scoped lang="scss">

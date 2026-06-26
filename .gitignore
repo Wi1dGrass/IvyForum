@@ -47,6 +47,11 @@ backend/src/main/resources/application-dev.yml
 # === 文档临时文件 ===
 docs/prompt.md
 docs/tmp/
+docs/问题清单.md
+
+# === 测试文件 ===
+test/
+backend/cp.txt
 
 # === IDE ===
 .vscode/settings.json
