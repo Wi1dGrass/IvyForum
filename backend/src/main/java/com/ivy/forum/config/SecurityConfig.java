@@ -48,8 +48,8 @@ public class SecurityConfig {
                                 "/favicon.ico"
                         ).permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET,
-                                "/channels/**", "/tags/**", "/tags", "/posts", "/posts/hot", "/posts/*",
-                                "/posts/*/comments", "/users/*/profile", "/users/*/posts", "/users/*/collects"
+                                "/channels/**", "/tags/**", "/tags", "/posts", "/posts/hot", "/posts/**",
+                                "/comments/**", "/users/*/profile", "/users/*/posts", "/users/*/collects"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

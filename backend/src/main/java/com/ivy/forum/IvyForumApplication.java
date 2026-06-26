@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @MapperScan("com.ivy.forum.mapper")
 @EnableScheduling
-public class SchoolForumApplication {
+public class IvyForumApplication {
     public static void main(String[] args) {
-        SpringApplication.run(SchoolForumApplication.class, args);
+        SpringApplication.run(IvyForumApplication.class, args);
     }
 }
