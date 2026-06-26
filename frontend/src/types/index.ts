@@ -58,7 +58,7 @@ export interface PostDetail extends PostListItem {
 }
 
 export interface PostListQuery {
-  channelId?: number; tagIds?: number[]; keyword?: string
+  channelId?: number; tagId?: number; keyword?: string
   sort?: PostSort; page?: number; size?: number
 }
 export interface PostSaveRequest {
@@ -108,6 +108,7 @@ export interface AdminUserItem extends User {
 }
 export interface HotPostItem {
   postId: number; rankNo: number; hotScore: number; title: string
-  authorNickname: string; channelId: number; channelName: string
+  authorNickname: string; authorAvatar?: string | null; channelId: number; channelName: string
+  contentAbstract?: string; firstImage?: string
   viewCount: number; likeCount: number; commentCount: number
 }

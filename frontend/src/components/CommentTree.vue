@@ -1,7 +1,7 @@
 <template>
   <div class="comment-tree">
     <div v-for="c in list" :key="c.commentId" class="comment-item">
-      <el-avatar :size="36" :src="c.authorAvatar || ''">{{ c.authorNickname?.[0] }}</el-avatar>
+      <el-avatar :size="36" :src="c.authorAvatar || ''" class="clickable" @click="goUser(c.authorId)">{{ c.authorNickname?.[0] }}</el-avatar>
       <div class="body">
         <div class="line">
           <span class="name">{{ c.authorNickname }}</span>
@@ -38,6 +38,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { Pointer } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { formatTime } from '@/utils/date'
@@ -47,6 +48,8 @@ import { useUserStore } from '@/stores/user'
 
 const props = defineProps<{ list: any[]; postId: number }>()
 const emit = defineEmits<{ refresh: [] }>()
+const router = useRouter()
+function goUser(id: number) { router.push(`/user/${id}`) }
 
 const userStore = useUserStore()
 const reply = ref<number | null>(null)
@@ -79,6 +82,7 @@ async function del(c: any) {
 
 <style scoped lang="scss">
 .comment-item { display: flex; gap: 10px; padding: 14px 0; border-bottom: 1px solid var(--sf-border-soft, #f0f3f9); }
+.clickable { cursor: pointer; transition: opacity .2s; &:hover { opacity: .8; } }
 .body { flex: 1; min-width: 0; }
 .line { display: flex; align-items: center; gap: 8px; font-size: 13px; }
 .name { font-weight: 600; color: var(--sf-text-1, #1f2937); }

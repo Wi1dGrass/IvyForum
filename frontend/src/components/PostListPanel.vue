@@ -58,10 +58,8 @@ async function loadList() {
   try {
     const q: any = { page: page.value, size, sort: sort.value }
     if (props.channelId) q.channelId = props.channelId
-    const tagIds: number[] = []
-    if (props.tagId) tagIds.push(props.tagId)
-    if (selectedTag.value) tagIds.push(selectedTag.value)
-    if (tagIds.length) q.tagIds = tagIds
+    const tid = props.tagId || selectedTag.value
+    if (tid) q.tagId = tid
     if (props.keyword) q.keyword = props.keyword
     const r = await postApi.list(q)
     records.value = r.records
@@ -70,7 +68,7 @@ async function loadList() {
 }
 
 function setSort(s: PostSort) { if (s === sort.value) return; sort.value = s; page.value = 1; loadList() }
-function toggleTag(id: number) { selectedTag.value = selectedTag.value === id ? null : id; page.value = 1 }
+function toggleTag(id: number) { selectedTag.value = selectedTag.value === id ? null : id; page.value = 1; loadList() }
 function onPage(p: number) { page.value = p; loadList() }
 
 watch(() => props.channelId, () => { page.value = 1; loadList() })

@@ -26,31 +26,46 @@
       <el-tab-pane label="TA 的发帖" name="posts" />
     </el-tabs>
 
-    <PostListPanel :key="userId" v-if="tab === 'posts'" />
+    <div v-if="tab === 'posts'" v-loading="postsLoading">
+      <PostCard v-for="p in posts" :key="p.postId" :post="p" />
+      <div v-if="!postsLoading && !posts.length" class="sf-empty">暂无发帖</div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { userApi } from '@/api/user'
 import { useUserStore } from '@/stores/user'
-import PostListPanel from '@/components/PostListPanel.vue'
+import PostCard from '@/components/PostCard.vue'
+import type { PostListItem } from '@/types'
 
 const route = useRoute()
+const router = useRouter()
 const userStore = useUserStore()
 const userId = computed(() => Number(route.params.id))
 const user = ref<any>(null)
 const loading = ref(true)
 const tab = ref('posts')
 const stats = ref({ postCount: 0, likeCount: 0, collectCount: 0 })
+const posts = ref<PostListItem[]>([])
+const postsLoading = ref(false)
 const roleText = computed(() => ({ STUDENT: '同学', TEACHER: '老师', ADMIN: '管理员' } as any)[user.value?.role] || '同学')
 const isMe = computed(() => userStore.user?.userId === userId.value)
+
+function goUser(id: number) { router.push(`/user/${id}`) }
 
 async function load() {
   loading.value = true; user.value = await userApi.profile(userId.value)
   stats.value = { postCount: user.value.postCount || 0, likeCount: user.value.likeCount || 0, collectCount: user.value.collectCount || 0 }
   loading.value = false
+  loadPosts()
+}
+async function loadPosts() {
+  postsLoading.value = true
+  posts.value = await userApi.posts(userId.value) || []
+  postsLoading.value = false
 }
 watch(() => route.params.id, load, { immediate: true })
 </script>

@@ -1,7 +1,7 @@
 <template>
   <router-link :to="`/post/${post.postId}`" class="post-card sf-card">
     <div class="head">
-      <el-avatar :size="36" :src="post.authorAvatar || ''">
+      <el-avatar :size="36" :src="post.authorAvatar || ''" class="clickable" @click.prevent="goUser(post.authorId)">
         {{ post.authorNickname?.[0] }}
       </el-avatar>
       <div class="meta">
@@ -41,12 +41,15 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { View, Pointer, ChatLineRound, Star } from '@element-plus/icons-vue'
 import TagChip from './TagChip.vue'
 import { formatTime, formatCount } from '@/utils/date'
 import type { PostListItem } from '@/types'
 
-defineProps<{ post: PostListItem }>()
+const props = defineProps<{ post: PostListItem }>()
+const router = useRouter()
+function goUser(id: number) { router.push(`/user/${id}`) }
 </script>
 
 <style scoped lang="scss" xmlns="http://www.w3.org/1999/html">
@@ -56,6 +59,7 @@ defineProps<{ post: PostListItem }>()
   &:hover { transform: translateY(-2px); box-shadow: var(--sf-shadow-hover, 0 10px 30px rgba(67,97,238,.16)); }
 }
 .head { display: flex; align-items: center; gap: 10px; }
+.clickable { cursor: pointer; transition: opacity .2s; &:hover { opacity: .8; } }
 .meta { display: flex; flex-direction: column; gap: 2px; }
 .author { font-weight: 600; color: var(--sf-text-1, #1f2937); display: flex; align-items: center; gap: 6px; }
 .sub { font-size: 12px; color: var(--sf-text-3, #94a3b8); display: flex; gap: 6px; align-items: center; }

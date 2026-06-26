@@ -11,7 +11,7 @@
         </div>
 
         <div class="author-bar">
-          <div class="left">
+          <div class="left" @click="router.push(`/user/${post.authorId}`)" style="cursor:pointer">
             <el-avatar :size="42" :src="post.authorAvatar || ''">{{ post.authorNickname?.[0] }}</el-avatar>
             <div>
               <div class="a-name">{{ post.authorNickname }}</div>
