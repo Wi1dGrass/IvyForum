@@ -48,9 +48,10 @@ backend/src/main/resources/application-dev.yml
 docs/prompt.md
 docs/tmp/
 docs/问题清单.md
+docs/postman/
 
 # === 测试文件 ===
-test/
+/test/
 backend/cp.txt
 backend/uploads/
 
