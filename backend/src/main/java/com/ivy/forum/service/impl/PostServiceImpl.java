@@ -115,7 +115,8 @@ public class PostServiceImpl implements PostService {
     public void updatePost(Long id, PostCreateRequest req, Long userId) {
         Post p = postMapper.selectById(id);
         if (p == null) throw new BusinessException(ErrorCode.NOT_FOUND);
-        if (!p.getAuthorId().equals(userId)) throw new BusinessException(ErrorCode.FORBIDDEN);
+        if (!p.getAuthorId().equals(userId) && !com.ivy.forum.security.SecurityUtils.isAdmin())
+            throw new BusinessException(ErrorCode.FORBIDDEN);
         p.setTitle(req.getTitle());
         p.setContent(req.getContent());
         p.setChannelId(req.getChannelId());
@@ -135,7 +136,8 @@ public class PostServiceImpl implements PostService {
     public void deletePost(Long id, Long userId) {
         Post p = postMapper.selectById(id);
         if (p == null) throw new BusinessException(ErrorCode.NOT_FOUND);
-        if (!p.getAuthorId().equals(userId)) throw new BusinessException(ErrorCode.FORBIDDEN);
+        if (!p.getAuthorId().equals(userId) && !com.ivy.forum.security.SecurityUtils.isAdmin())
+            throw new BusinessException(ErrorCode.FORBIDDEN);
         p.setStatus("DELETED");
         postMapper.updateById(p);
     }
@@ -161,11 +163,22 @@ public class PostServiceImpl implements PostService {
         List<HotPost> hotPosts = hotPostMapper.selectList(
                 new LambdaQueryWrapper<HotPost>().orderByAsc(HotPost::getRankNo));
         if (hotPosts.isEmpty()) return Collections.emptyList();
+        Map<Long, HotPost> hotMap = hotPosts.stream().collect(Collectors.toMap(HotPost::getPostId, hp -> hp));
         List<Long> ids = hotPosts.stream().map(HotPost::getPostId).collect(Collectors.toList());
         Map<Long, Post> postMap = postMapper.selectList(
                 new LambdaQueryWrapper<Post>().in(Post::getPostId, ids))
                 .stream().collect(Collectors.toMap(Post::getPostId, p -> p));
-        return ids.stream().map(postMap::get).filter(Objects::nonNull).map(this::toVo).collect(Collectors.toList());
+        return ids.stream().map(id -> {
+            Post p = postMap.get(id);
+            if (p == null) return null;
+            PostItemVo vo = toVo(p);
+            HotPost hp = hotMap.get(id);
+            if (hp != null) {
+                vo.setRankNo(hp.getRankNo());
+                vo.setHotScore(hp.getHotScore());
+            }
+            return vo;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     @Override

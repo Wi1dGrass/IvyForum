@@ -149,8 +149,11 @@ CREATE TABLE t_hot_post (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- seed data
-INSERT INTO t_user (username, password, nickname, role, status, email, signature)
-VALUES ('admin', '$2a$10$1vca0X5PJwTqVFzFic3EreuOUuj5QnNceycx5mz1qfTqEfkPvzFme', 'Admin', 'ADMIN', 'NORMAL', 'admin@ivy.edu', 'Forum Admin');
+INSERT INTO t_user (username, password, nickname, role, status, email, signature) VALUES
+('admin', '$2a$10$1vca0X5PJwTqVFzFic3EreuOUuj5QnNceycx5mz1qfTqEfkPvzFme', 'Admin', 'ADMIN', 'NORMAL', 'admin@ivy.edu', 'Forum Admin'),
+('teacher01', '$2a$10$9L9mu1DtCdUM5F7DvJOJ8.Ke6w/1ecT4dQUoCsUPMcnTsvC5KvFCi', '王老师', 'TEACHER', 'NORMAL', 'wang@school.edu', '答疑解惑'),
+('stu01', '$2a$10$9L9mu1DtCdUM5F7DvJOJ8.Ke6w/1ecT4dQUoCsUPMcnTsvC5KvFCi', '小明', 'STUDENT', 'NORMAL', 'stu01@school.edu', '努力学习ing'),
+('stu02', '$2a$10$9L9mu1DtCdUM5F7DvJOJ8.Ke6w/1ecT4dQUoCsUPMcnTsvC5KvFCi', '小红', 'STUDENT', 'NORMAL', 'stu02@school.edu', '爱技术');
 
 INSERT INTO t_channel (parent_id, name, sort, description, status) VALUES
 (0, '学习交流', 1, '学术问题与课程讨论', 'NORMAL'),

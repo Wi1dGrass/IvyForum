@@ -24,4 +24,6 @@ public class PostItemVo {
     private Integer isEssence;
     private List<TagBriefVo> tags;
     private LocalDateTime createTime;
+    private Integer rankNo;
+    private Double hotScore;
 }

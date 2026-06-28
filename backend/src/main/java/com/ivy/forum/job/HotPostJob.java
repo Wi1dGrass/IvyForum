@@ -7,6 +7,7 @@ import com.ivy.forum.mapper.HotPostMapper;
 import com.ivy.forum.mapper.PostMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ import java.util.stream.IntStream;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class HotPostJob {
+public class HotPostJob implements CommandLineRunner {
 
     private final PostMapper postMapper;
     private final HotPostMapper hotPostMapper;
@@ -48,5 +49,10 @@ public class HotPostJob {
             hotPostMapper.insert(hp);
         });
         log.info("hot posts refreshed, count={}", Math.min(hot.size(), 100));
+    }
+
+    @Override
+    public void run(String... args) {
+        refreshHotPosts();
     }
 }
